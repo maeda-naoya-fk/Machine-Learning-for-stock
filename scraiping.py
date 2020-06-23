@@ -11,7 +11,8 @@ class Scraiping:
         self.start = start
         self.finish = finish
         self.headers = headers
-
+        
+    # scraの作業を繰り返すメソッド
     def main(self):
 
         dfs = []
@@ -21,17 +22,20 @@ class Scraiping:
             print('Done : ' + sn)
 
         return dfs
-
+    #　scraでストックナンバーごとにスクレイピングしてdfを作成していく
     def scra(self, sn):
 
 
         data = []
+        #start_yearからfinish_yearまでスクレイピングする
         for y in range(self.start.year, self.finish.year+1):
-
+            
+            #stock_numberとyearをその都度変えてurlをsoupに入れていく
             url = 'https://kabuoji3.com/stock/{}/{}/'.format(int(sn), y)
             soup = BeautifulSoup(requests.get(url, headers = self.headers).content,'html.parser')
             tr = soup.find_all('tr')
-
+            
+            # とるデータがなくなるまで繰り返す
             t = 1
             while True:
 
@@ -50,7 +54,7 @@ class Scraiping:
 
             time.sleep(1)
 
-
-
+        #dfを作成
         df = pd.DataFrame(data, columns = ['日付', '始値', '高値', '安値', '終値', '出来高', '終値調整'])
+        
         return df
